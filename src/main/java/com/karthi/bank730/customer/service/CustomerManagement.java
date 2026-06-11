@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Year;
+
 @Service
 @RequiredArgsConstructor
 public class CustomerManagement {
@@ -22,12 +24,12 @@ public class CustomerManagement {
             throw  new RuntimeException("Customer Already Exists");
         }
         Customer customer = new Customer();
-        customer.setCustomerId("test1"); // AutoGenerate
+        customer.setCustomerId(generateCustomerId()); // Check the method for auto generate logic
         customer.setFullName(customerCreationRequest.fullName());
         customer.setEmail(customerCreationRequest.email());
         customer.setMobileNumber( customerCreationRequest.mobileNumber());
         customer.setAddress( customerCreationRequest.address());
-        customer.setAge(customer.getAge());
+        customer.setAge(customerCreationRequest.age());
         customer.setMinor(
                 customerCreationRequest.age() < 18 ? true : false
         );
@@ -41,6 +43,22 @@ public class CustomerManagement {
                 savedCustomer.getFullName()
         );
         return response;
+    }
+
+    public String generateCustomerId(){
+        int year = Year.now().getValue();
+
+        String latestCustomerId = customerRepository.findTopByOrderByIdDesc().map(
+//                customer -> customer.getCustomerId()
+                Customer::getCustomerId
+        ).orElse(null);
+
+        long sequence = 1;
+
+        if(latestCustomerId != null && latestCustomerId.startsWith("GP"+year)){
+            sequence = Long.parseLong(latestCustomerId.substring(6)) +1;
+        }
+        return "GB"+year+sequence;
     }
 
 }

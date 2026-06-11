@@ -12,8 +12,11 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true,  nullable = false)
     private String customerId;
+
     private String fullName;
+    @Column(unique = true)
     private String email;
     private String mobileNumber;
     private String address;
