@@ -5,10 +5,12 @@ import com.karthi.bank730.customer.dto.CustomerResponse;
 import com.karthi.bank730.customer.entiry.Customer;
 import com.karthi.bank730.customer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Year;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,11 +40,7 @@ public class CustomerManagement {
 
         Customer savedCustomer = customerRepository.save(customer);
 
-        CustomerResponse response = new CustomerResponse(
-                savedCustomer.getCustomerId(),
-                savedCustomer.getFullName()
-        );
-        return response;
+        return mapToCustomerResponse(savedCustomer);
     }
 
     public String generateCustomerId(){
@@ -61,4 +59,25 @@ public class CustomerManagement {
         return "GB"+year+sequence;
     }
 
+    public CustomerResponse findCustomerById(String customerId) {
+        return mapToCustomerResponse(
+                customerRepository.findByCustomerId(customerId).orElseThrow(
+                        () -> new RuntimeException("Customer Not Found")
+                )
+        );
+
+    }
+
+    public CustomerResponse mapToCustomerResponse(Customer customer){
+        return  new CustomerResponse(
+                customer.getCustomerId(),
+                customer.getFullName()
+        );
+    }
+
+    public List<CustomerResponse> getAllCustomers() {
+        return customerRepository.findAll().stream().map(cust ->
+                    mapToCustomerResponse(cust)
+                ).toList();
+    }
 }

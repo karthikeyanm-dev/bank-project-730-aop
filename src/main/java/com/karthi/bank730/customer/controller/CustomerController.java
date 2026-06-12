@@ -9,10 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/customers")
@@ -27,8 +26,19 @@ public class CustomerController {
         );
     }
 
+    @GetMapping
+    public ResponseEntity<List<CustomerResponse>> getAllCustomers(){
+        return new ResponseEntity<>(
+                customerManagement.getAllCustomers(),HttpStatus.OK
+        );
+    }
 
-    // Create a customer ID Unique
-    // Aadhaar and pan validation - optional try
-    // Other Controllers
+    @GetMapping("/{customerId}")
+    public ResponseEntity<CustomerResponse> getCustomerById(@PathVariable String customerId){
+        return new ResponseEntity<>(
+                customerManagement.findCustomerById(customerId),HttpStatus.OK
+        );
+    }
+
+
 }
