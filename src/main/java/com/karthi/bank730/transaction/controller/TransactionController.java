@@ -1,0 +1,33 @@
+package com.karthi.bank730.transaction.controller;
+
+import com.karthi.bank730.transaction.dto.DepositRequest;
+import com.karthi.bank730.transaction.dto.TransactionResponse;
+import com.karthi.bank730.transaction.dto.WithdrawRequest;
+import com.karthi.bank730.transaction.service.TransactionService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/transaction")
+@RequiredArgsConstructor
+public class TransactionController {
+
+    final private TransactionService transactionService;
+
+    @PostMapping("/deposit")
+    public ResponseEntity<TransactionResponse> deposit(@Valid @RequestBody DepositRequest  depositRequest){
+        return new ResponseEntity<>(transactionService.deposit(depositRequest), HttpStatus.OK);
+    }
+
+    @PostMapping("/withdraw")
+    public ResponseEntity<TransactionResponse> withdraw(@Valid @RequestBody WithdrawRequest withdrawRequest){
+        return new ResponseEntity<>(transactionService.withdraw(withdrawRequest),HttpStatus.OK);
+    }
+}

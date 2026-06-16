@@ -52,10 +52,12 @@ public class CustomerManagement {
         ).orElse(null);
 
         long sequence = 1;
-
-        if(latestCustomerId != null && latestCustomerId.startsWith("GP"+year)){
-            sequence = Long.parseLong(latestCustomerId.substring(6)) +1;
+        System.out.println(latestCustomerId);
+        if(latestCustomerId != null && latestCustomerId.startsWith("GB"+year)){
+            sequence = Long.parseLong(latestCustomerId.substring(6));
+            sequence++;
         }
+        System.out.println(sequence);
         return "GB"+year+sequence;
     }
 
