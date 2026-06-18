@@ -2,6 +2,7 @@ package com.karthi.bank730.transaction.controller;
 
 import com.karthi.bank730.transaction.dto.DepositRequest;
 import com.karthi.bank730.transaction.dto.TransactionResponse;
+import com.karthi.bank730.transaction.dto.TransferRequest;
 import com.karthi.bank730.transaction.dto.WithdrawRequest;
 import com.karthi.bank730.transaction.service.TransactionService;
 import jakarta.validation.Valid;
@@ -22,12 +23,17 @@ public class TransactionController {
     final private TransactionService transactionService;
 
     @PostMapping("/deposit")
-    public ResponseEntity<TransactionResponse> deposit(@Valid @RequestBody DepositRequest  depositRequest){
+    public ResponseEntity<TransactionResponse> deposit(@Valid @RequestBody DepositRequest  depositRequest) throws InterruptedException {
         return new ResponseEntity<>(transactionService.deposit(depositRequest), HttpStatus.OK);
     }
 
     @PostMapping("/withdraw")
     public ResponseEntity<TransactionResponse> withdraw(@Valid @RequestBody WithdrawRequest withdrawRequest){
         return new ResponseEntity<>(transactionService.withdraw(withdrawRequest),HttpStatus.OK);
+    }
+
+    @PostMapping("/transfer")
+    public ResponseEntity<TransactionResponse> transfer(@Valid @RequestBody TransferRequest transferRequest){
+        return new ResponseEntity<>(transactionService.transfer(transferRequest),HttpStatus.OK);
     }
 }

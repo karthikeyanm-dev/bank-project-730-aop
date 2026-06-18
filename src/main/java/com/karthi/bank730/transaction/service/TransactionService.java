@@ -5,6 +5,7 @@ import com.karthi.bank730.account.entity.Account;
 import com.karthi.bank730.account.repository.AccountRepository;
 import com.karthi.bank730.transaction.dto.DepositRequest;
 import com.karthi.bank730.transaction.dto.TransactionResponse;
+import com.karthi.bank730.transaction.dto.TransferRequest;
 import com.karthi.bank730.transaction.dto.WithdrawRequest;
 import com.karthi.bank730.transaction.enmus.TransactionStatus;
 import com.karthi.bank730.transaction.enmus.TransactionType;
@@ -28,12 +29,13 @@ public class TransactionService {
 
 
 //    deposit
-    public TransactionResponse deposit(DepositRequest depositRequest){
+    public TransactionResponse deposit(DepositRequest depositRequest) throws InterruptedException {
         Account account = accountRepository.findAccountByAccountNumber(depositRequest.accountNumber())
                 .orElseThrow(
                         () -> new RuntimeException(depositRequest.accountNumber()+" not found")
                 );
 
+//        Thread.sleep(5000);
         BigDecimal before = account.getBalance();
         account.setBalance(
                 before.add(depositRequest.amount())
@@ -85,6 +87,13 @@ public class TransactionService {
         return transactionMapper(transaction);
     }
 
+
+    public TransactionResponse transfer(@Valid TransferRequest transferRequest) {
+        // debit source account
+        // credit destination account
+        // create transactions records
+        return null;
+    }
 
 
 //    Generate Transaction Number
